@@ -8,6 +8,14 @@ use Imper86\ImmiApi\Resource\Order\InvoiceAddresses;
 use Imper86\ImmiApi\Resource\Order\Items;
 use Imper86\ImmiApi\Resource\Order\ShippingAddresses;
 
+/**
+ * Class Orders
+ * @package Imper86\ImmiApi\Resource
+ *
+ * @method InvoiceAddresses invoiceAddresses()
+ * @method Items items()
+ * @method ShippingAddresses shippingAddresses()
+ */
 class Orders extends AbstractResource
 {
     use GetTrait, PostTrait, PutTrait, DeleteTrait;
@@ -15,20 +23,5 @@ class Orders extends AbstractResource
     protected function getBaseUri(): string
     {
         return '/orders';
-    }
-
-    public function invoiceAddresses(): InvoiceAddresses
-    {
-        return new InvoiceAddresses($this->immi);
-    }
-
-    public function items(): Items
-    {
-        return new Items($this->immi);
-    }
-
-    public function shippingAddresses(): ShippingAddresses
-    {
-        return new ShippingAddresses($this->immi);
     }
 }

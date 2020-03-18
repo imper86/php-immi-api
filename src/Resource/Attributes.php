@@ -4,9 +4,16 @@
 namespace Imper86\ImmiApi\Resource;
 
 
-use Imper86\ImmiApi\Resource\Attribute\Options;
-use Imper86\ImmiApi\Resource\Attribute\Translations;
+use Imper86\ImmiApi\Resource\Attributes\Options;
+use Imper86\ImmiApi\Resource\Attributes\Translations;
 
+/**
+ * Class Attributes
+ * @package Imper86\ImmiApi\Resource
+ *
+ * @method Translations translations()
+ * @method Options options()
+ */
 class Attributes extends AbstractResource
 {
     use GetTrait;
@@ -14,15 +21,5 @@ class Attributes extends AbstractResource
     protected function getBaseUri(): string
     {
         return '/attributes';
-    }
-
-    public function translations(): Translations
-    {
-        return new Translations($this->immi);
-    }
-
-    public function options(): Options
-    {
-        return new Options($this->immi);
     }
 }

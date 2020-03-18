@@ -24,31 +24,46 @@ abstract class AbstractResource implements ResourceInterface
     /**
      * @var RequestFactoryInterface
      */
-    private $requestFactory;
+    protected $requestFactory;
     /**
      * @var UriFactoryInterface
      */
-    private $uriFactory;
+    protected $uriFactory;
     /**
      * @var HttpClientInterface
      */
-    private $httpClient;
+    protected $httpClient;
     /**
      * @var StreamFactoryInterface
      */
-    private $streamFactory;
-
+    protected $streamFactory;
+    /**
+     * @var \ReflectionClass
+     */
+    private $reflection;
 
     public function __construct(ImmiInterface $immi)
     {
         $this->immi = $immi;
-        $this->requestFactory = $immi->getHttpClientBuilder()->getRequestFactory();
-        $this->uriFactory = $immi->getHttpClientBuilder()->getUriFactory();
-        $this->streamFactory = $immi->getHttpClientBuilder()->getStreamFactory();
-        $this->httpClient = $immi->getHttpClientBuilder()->getHttpClient();
+        $this->requestFactory = $immi->getBuilder()->getRequestFactory();
+        $this->uriFactory = $immi->getBuilder()->getUriFactory();
+        $this->streamFactory = $immi->getBuilder()->getStreamFactory();
+        $this->httpClient = $immi->getBuilder()->getHttpClient();
+        $this->reflection = new \ReflectionClass($this);
     }
 
-    protected function apiGet(string $uri, ?array $query = null): ?array
+    public function __call($name, $arguments)
+    {
+        $className = sprintf('%s\\%s', $this->reflection->getName(), ucfirst($name));
+
+        if (class_exists($className) && is_a($className, ResourceInterface::class, true)) {
+            return new $className($this->immi);
+        }
+
+        throw new \InvalidArgumentException(sprintf('%s resource not found', $name));
+    }
+
+    protected function apiGet(string $uri, ?array $query = null): ResponseInterface
     {
         $uri = $this->uriFactory->createUri($uri);
 
@@ -57,12 +72,10 @@ abstract class AbstractResource implements ResourceInterface
         }
 
         $request = $this->requestFactory->createRequest('GET', $uri);
-        $response = $this->httpClient->sendRequest($request);
-
-        return $this->transformResponse($response);
+        return $this->httpClient->sendRequest($request);
     }
 
-    protected function apiPost(string $uri, ?array $body = null): ?array
+    protected function apiPost(string $uri, ?array $body = null): ResponseInterface
     {
         $request = $this->requestFactory->createRequest('POST', $uri);
 
@@ -71,12 +84,10 @@ abstract class AbstractResource implements ResourceInterface
             $request = $request->withBody($stream);
         }
 
-        $response = $this->httpClient->sendRequest($request);
-
-        return $this->transformResponse($response);
+        return $this->httpClient->sendRequest($request);
     }
 
-    protected function apiPut(string $uri, ?array $body = null): ?array
+    protected function apiPut(string $uri, ?array $body = null): ResponseInterface
     {
         $request = $this->requestFactory->createRequest('PUT', $uri);
 
@@ -85,21 +96,12 @@ abstract class AbstractResource implements ResourceInterface
             $request = $request->withBody($stream);
         }
 
-        $response = $this->httpClient->sendRequest($request);
-
-        return $this->transformResponse($response);
+        return $this->httpClient->sendRequest($request);
     }
 
-    protected function apiDelete(string $uri): ?array
+    protected function apiDelete(string $uri): ResponseInterface
     {
         $request = $this->requestFactory->createRequest('DELETE', $uri);
-        $response = $this->httpClient->sendRequest($request);
-
-        return $this->transformResponse($response);
-    }
-
-    private function transformResponse(ResponseInterface $response): ?array
-    {
-        return json_decode($response->getBody()->__toString(), true);
+        return $this->httpClient->sendRequest($request);
     }
 }

@@ -9,6 +9,15 @@ use Imper86\ImmiApi\Resource\Product\Images;
 use Imper86\ImmiApi\Resource\Product\Prices;
 use Imper86\ImmiApi\Resource\Product\Translations;
 
+/**
+ * Class Products
+ * @package Imper86\ImmiApi\Resource
+ *
+ * @method ProductAttributes attributes()
+ * @method Images images()
+ * @method Prices prices()
+ * @method Translations translations()
+ */
 class Products extends AbstractResource
 {
     use GetTrait;
@@ -16,25 +25,5 @@ class Products extends AbstractResource
     protected function getBaseUri(): string
     {
         return '/products';
-    }
-
-    public function attributes(): ProductAttributes
-    {
-        return new ProductAttributes($this->immi);
-    }
-
-    public function images(): Images
-    {
-        return new Images($this->immi);
-    }
-
-    public function prices(): Prices
-    {
-        return new Prices($this->immi);
-    }
-
-    public function translations(): Translations
-    {
-        return new Translations($this->immi);
     }
 }

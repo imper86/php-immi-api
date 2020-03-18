@@ -9,12 +9,12 @@
 namespace Imper86\ImmiApi;
 
 use Http\Client\Common\Plugin;
-use Http\Message\Authentication\Bearer;
-use Imper86\AutoTokenPlugin\AutoTokenPlugin;
 use Imper86\HttpClientBuilder\Builder;
 use Imper86\HttpClientBuilder\BuilderInterface;
-use Imper86\ImmiApi\HttpClient\Plugin\UriPreparePlugin;
+use Imper86\ImmiApi\Model\CredentialsInterface;
 use Imper86\ImmiApi\Oauth\OauthClient;
+use Imper86\ImmiApi\Oauth\OauthClientInterface;
+use Imper86\ImmiApi\Plugin\UriPlugin;
 use Imper86\ImmiApi\Resource\Attributes;
 use Imper86\ImmiApi\Resource\Carts;
 use Imper86\ImmiApi\Resource\Commands;
@@ -24,9 +24,6 @@ use Imper86\ImmiApi\Resource\Orders;
 use Imper86\ImmiApi\Resource\Products;
 use Imper86\ImmiApi\Resource\ResourceInterface;
 use Imper86\ImmiApi\Resource\Users;
-use Imper86\OauthClient\Model\CredentialsInterface;
-use Imper86\OauthClient\OauthClientInterface;
-use Imper86\OauthClient\Repository\TokenRepositoryInterface;
 use InvalidArgumentException;
 use Psr\Cache\CacheItemPoolInterface;
 
@@ -46,13 +43,9 @@ use Psr\Cache\CacheItemPoolInterface;
 class Immi implements ImmiInterface
 {
     /**
-     * @var TokenRepositoryInterface|null
-     */
-    private $tokenRepository;
-    /**
      * @var BuilderInterface
      */
-    private $httpClientBuilder;
+    private $builder;
     /**
      * @var CredentialsInterface
      */
@@ -61,49 +54,40 @@ class Immi implements ImmiInterface
      * @var OauthClientInterface|null
      */
     private $oauthClient;
+    /**
+     * @var \ReflectionClass
+     */
+    private $reflection;
 
-    public function __construct(
-        CredentialsInterface $credentials,
-        ?TokenRepositoryInterface $tokenRepository = null,
-        ?BuilderInterface $httpClientBuilder = null
-    )
+    public function __construct(CredentialsInterface $credentials, ?BuilderInterface $httpClientBuilder = null)
     {
         $this->credentials = $credentials;
-        $this->tokenRepository = $tokenRepository;
-        $this->httpClientBuilder = $httpClientBuilder ?: new Builder();
+        $this->builder = $httpClientBuilder ?: new Builder();
+        $this->reflection = new \ReflectionClass($this);
 
-        $this->httpClientBuilder->addPlugin(new UriPreparePlugin($credentials, $this->httpClientBuilder->getUriFactory()));
+        $this->addPlugin(new UriPlugin());
     }
 
     public function __call($name, $arguments)
     {
-        return $this->api($name);
-    }
+        $className = sprintf('%s\\%s\\%s', $this->reflection->getNamespaceName(), 'Resource', ucfirst($name));
 
-    public function api(string $resource): ResourceInterface
-    {
-        $className = 'Imper86\\ImmiApi\\Resource\\' . ucfirst($resource);
-
-        if (class_exists($className) && is_subclass_of($className, ResourceInterface::class)) {
+        if (class_exists($className) && is_a($className, ResourceInterface::class, true)) {
             return new $className($this);
         }
 
-        throw new InvalidArgumentException(sprintf('%s resource not found', $resource));
+        throw new InvalidArgumentException(sprintf('%s resource not found', $name));
     }
 
-    public function getHttpClientBuilder(): BuilderInterface
+    public function getBuilder(): BuilderInterface
     {
-        return $this->httpClientBuilder;
+        return $this->builder;
     }
 
-    public function oauth2(): OauthClientInterface
+    public function oauth(): OauthClientInterface
     {
         if (null === $this->oauthClient) {
-            $this->oauthClient = new OauthClient(
-                $this->credentials,
-                $this->getHttpClientBuilder()->getUriFactory(),
-                $this->tokenRepository
-            );
+            $this->oauthClient = new OauthClient($this->credentials);
         }
 
         return $this->oauthClient;
@@ -111,37 +95,21 @@ class Immi implements ImmiInterface
 
     public function addPlugin(Plugin $plugin): void
     {
-        $this->httpClientBuilder->addPlugin($plugin);
+        $this->builder->addPlugin($plugin);
     }
 
     public function removePlugin(string $fqcn): void
     {
-        $this->httpClientBuilder->removePlugin($fqcn);
+        $this->builder->removePlugin($fqcn);
     }
 
     public function addCache(CacheItemPoolInterface $cacheItemPool, array $config = []): void
     {
-        $this->httpClientBuilder->addCache($cacheItemPool, $config);
+        $this->builder->addCache($cacheItemPool, $config);
     }
 
     public function removeCache(): void
     {
-        $this->httpClientBuilder->removeCache();
-    }
-
-    public function isAuthenticated(): bool
-    {
-        $authPlugins = [
-            Bearer::class,
-            AutoTokenPlugin::class,
-        ];
-
-        foreach ($authPlugins as $authPlugin) {
-            if ($this->httpClientBuilder->hasPlugin($authPlugin)) {
-                return true;
-            }
-        }
-
-        return false;
+        $this->builder->removeCache();
     }
 }

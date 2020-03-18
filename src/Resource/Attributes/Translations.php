@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Imper86\ImmiApi\Resource\Attribute\Option;
+namespace Imper86\ImmiApi\Resource\Attributes;
 
 
 use Imper86\ImmiApi\Resource\AbstractResource;
@@ -13,6 +13,6 @@ class Translations extends AbstractResource
 
     protected function getBaseUri(): string
     {
-        return '/attribute_option_translations';
+        return '/attribute_translations';
     }
 }

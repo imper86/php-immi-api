@@ -112,7 +112,7 @@ $credentials = new Credentials([
 ]);
 $tokenRepository = new FileTokenRepository('/tmp');
 $client = new Immi($credentials, $tokenRepository);
-$client->addPlugin(new AutoTokenPlugin('userid', $tokenRepository, $client->oauth2()));
+$client->addPlugin(new AutoTokenPlugin('userid', $tokenRepository, $client->oauth()));
 $client->addPlugin(new ErrorPlugin());
 
 var_dump($client->attributes()->options()->translations()->get('xfg-asdf'));

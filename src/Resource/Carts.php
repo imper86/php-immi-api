@@ -6,6 +6,12 @@ namespace Imper86\ImmiApi\Resource;
 
 use Imper86\ImmiApi\Resource\Cart\Items;
 
+/**
+ * Class Carts
+ * @package Imper86\ImmiApi\Resource
+ *
+ * @method Items items()
+ */
 class Carts extends AbstractResource
 {
     use GetTrait, PostTrait, PutTrait;
@@ -13,10 +19,5 @@ class Carts extends AbstractResource
     protected function getBaseUri(): string
     {
         return '/carts';
-    }
-
-    public function items(): Items
-    {
-        return new Items($this->immi);
     }
 }

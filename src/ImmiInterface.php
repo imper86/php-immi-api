@@ -10,6 +10,7 @@ namespace Imper86\ImmiApi;
 
 use Http\Client\Common\Plugin;
 use Imper86\HttpClientBuilder\BuilderInterface;
+use Imper86\ImmiApi\Oauth\OauthClientInterface;
 use Imper86\ImmiApi\Resource\Attributes;
 use Imper86\ImmiApi\Resource\Carts;
 use Imper86\ImmiApi\Resource\Commands;
@@ -17,9 +18,7 @@ use Imper86\ImmiApi\Resource\ContactRequests;
 use Imper86\ImmiApi\Resource\Countries;
 use Imper86\ImmiApi\Resource\Orders;
 use Imper86\ImmiApi\Resource\Products;
-use Imper86\ImmiApi\Resource\ResourceInterface;
 use Imper86\ImmiApi\Resource\Users;
-use Imper86\OauthClient\OauthClientInterface;
 use Psr\Cache\CacheItemPoolInterface;
 
 /**
@@ -38,20 +37,14 @@ use Psr\Cache\CacheItemPoolInterface;
 interface ImmiInterface
 {
     /**
-     * @param string $resource
-     * @return ResourceInterface
-     */
-    public function api(string $resource): ResourceInterface;
-
-    /**
      * @return OauthClientInterface
      */
-    public function oauth2(): OauthClientInterface;
+    public function oauth(): OauthClientInterface;
 
     /**
      * @return BuilderInterface
      */
-    public function getHttpClientBuilder(): BuilderInterface;
+    public function getBuilder(): BuilderInterface;
 
     /**
      * @param Plugin $plugin
@@ -75,9 +68,4 @@ interface ImmiInterface
      * Removes cache plugin from http client
      */
     public function removeCache(): void;
-
-    /**
-     * @return bool
-     */
-    public function isAuthenticated(): bool;
 }
