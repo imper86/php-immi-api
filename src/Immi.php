@@ -14,6 +14,7 @@ use Imper86\HttpClientBuilder\BuilderInterface;
 use Imper86\ImmiApi\Model\CredentialsInterface;
 use Imper86\ImmiApi\Oauth\OauthClient;
 use Imper86\ImmiApi\Oauth\OauthClientInterface;
+use Imper86\ImmiApi\Plugin\HeadersPlugin;
 use Imper86\ImmiApi\Plugin\UriPlugin;
 use Imper86\ImmiApi\Resource\Attributes;
 use Imper86\ImmiApi\Resource\Carts;
@@ -66,6 +67,7 @@ class Immi implements ImmiInterface
         $this->reflection = new \ReflectionClass($this);
 
         $this->addPlugin(new UriPlugin());
+        $this->addPlugin(new HeadersPlugin());
     }
 
     public function __call($name, $arguments)
