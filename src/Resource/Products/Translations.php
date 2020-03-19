@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Imper86\ImmiApi\Resource\Country;
+namespace Imper86\ImmiApi\Resource\Products;
 
 
 use Imper86\ImmiApi\Resource\AbstractResource;
@@ -13,6 +13,6 @@ class Translations extends AbstractResource
 
     protected function getBaseUri(): string
     {
-        return '/country_translations';
+        return '/product_translations';
     }
 }

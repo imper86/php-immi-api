@@ -1,18 +1,18 @@
 <?php
 
 
-namespace Imper86\ImmiApi\Resource\Product;
+namespace Imper86\ImmiApi\Resource\Countries;
 
 
 use Imper86\ImmiApi\Resource\AbstractResource;
 use Imper86\ImmiApi\Resource\GetTrait;
 
-class Attributes extends AbstractResource
+class Translations extends AbstractResource
 {
     use GetTrait;
 
     protected function getBaseUri(): string
     {
-        return '/product_attributes';
+        return '/country_translations';
     }
 }

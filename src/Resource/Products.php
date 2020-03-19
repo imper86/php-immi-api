@@ -4,10 +4,10 @@
 namespace Imper86\ImmiApi\Resource;
 
 
-use Imper86\ImmiApi\Resource\Product\Attributes as ProductAttributes;
-use Imper86\ImmiApi\Resource\Product\Images;
-use Imper86\ImmiApi\Resource\Product\Prices;
-use Imper86\ImmiApi\Resource\Product\Translations;
+use Imper86\ImmiApi\Resource\Products\Attributes as ProductAttributes;
+use Imper86\ImmiApi\Resource\Products\Images;
+use Imper86\ImmiApi\Resource\Products\Prices;
+use Imper86\ImmiApi\Resource\Products\Translations;
 
 /**
  * Class Products

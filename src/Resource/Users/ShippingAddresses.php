@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Imper86\ImmiApi\Resource\Order;
+namespace Imper86\ImmiApi\Resource\Users;
 
 
 use Imper86\ImmiApi\Resource\AbstractResource;
@@ -16,6 +16,6 @@ class ShippingAddresses extends AbstractResource
 
     protected function getBaseUri(): string
     {
-        return '/order_shipping_addresses';
+        return '/user_shipping_addresses';
     }
 }

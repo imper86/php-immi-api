@@ -4,7 +4,7 @@
 namespace Imper86\ImmiApi\Resource;
 
 
-use Imper86\ImmiApi\Resource\Country\Translations;
+use Imper86\ImmiApi\Resource\Countries\Translations;
 
 /**
  * Class Countries

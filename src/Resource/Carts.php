@@ -4,7 +4,7 @@
 namespace Imper86\ImmiApi\Resource;
 
 
-use Imper86\ImmiApi\Resource\Cart\Items;
+use Imper86\ImmiApi\Resource\Carts\Items;
 
 /**
  * Class Carts

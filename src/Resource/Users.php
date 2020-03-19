@@ -4,9 +4,9 @@
 namespace Imper86\ImmiApi\Resource;
 
 
-use Imper86\ImmiApi\Resource\User\InvoiceAddresses;
-use Imper86\ImmiApi\Resource\User\PriceRules;
-use Imper86\ImmiApi\Resource\User\ShippingAddresses;
+use Imper86\ImmiApi\Resource\Users\InvoiceAddresses;
+use Imper86\ImmiApi\Resource\Users\PriceRules;
+use Imper86\ImmiApi\Resource\Users\ShippingAddresses;
 
 /**
  * Class Users

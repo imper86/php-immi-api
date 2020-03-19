@@ -4,9 +4,9 @@
 namespace Imper86\ImmiApi\Resource;
 
 
-use Imper86\ImmiApi\Resource\Order\InvoiceAddresses;
-use Imper86\ImmiApi\Resource\Order\Items;
-use Imper86\ImmiApi\Resource\Order\ShippingAddresses;
+use Imper86\ImmiApi\Resource\Orders\InvoiceAddresses;
+use Imper86\ImmiApi\Resource\Orders\Items;
+use Imper86\ImmiApi\Resource\Orders\ShippingAddresses;
 
 /**
  * Class Orders

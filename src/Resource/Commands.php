@@ -4,7 +4,7 @@
 namespace Imper86\ImmiApi\Resource;
 
 
-use Imper86\ImmiApi\Resource\Command\CartCheckouts;
+use Imper86\ImmiApi\Resource\Commands\CartCheckouts;
 
 /**
  * Class Commands

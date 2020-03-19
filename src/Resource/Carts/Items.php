@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Imper86\ImmiApi\Resource\User;
+namespace Imper86\ImmiApi\Resource\Carts;
 
 
 use Imper86\ImmiApi\Resource\AbstractResource;
@@ -10,12 +10,12 @@ use Imper86\ImmiApi\Resource\GetTrait;
 use Imper86\ImmiApi\Resource\PostTrait;
 use Imper86\ImmiApi\Resource\PutTrait;
 
-class PriceRules extends AbstractResource
+class Items extends AbstractResource
 {
     use GetTrait, PostTrait, PutTrait, DeleteTrait;
 
     protected function getBaseUri(): string
     {
-        return '/user_price_rules';
+        return '/cart_items';
     }
 }

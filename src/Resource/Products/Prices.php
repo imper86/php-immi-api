@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Imper86\ImmiApi\Resource\Product;
+namespace Imper86\ImmiApi\Resource\Products;
 
 
 use Imper86\ImmiApi\Resource\AbstractResource;
