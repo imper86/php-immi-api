@@ -20,7 +20,7 @@ use Imper86\ImmiApi\Resource\Products\Translations;
  */
 class Products extends AbstractResource
 {
-    use GetTrait;
+    use GetTrait, PutTrait;
 
     protected function getBaseUri(): string
     {
