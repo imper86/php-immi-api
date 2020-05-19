@@ -11,6 +11,7 @@ namespace Imper86\ImmiApi;
 use Http\Client\Common\Plugin;
 use Imper86\HttpClientBuilder\BuilderInterface;
 use Imper86\ImmiApi\Oauth\OauthClientInterface;
+use Imper86\ImmiApi\Resource\Api;
 use Imper86\ImmiApi\Resource\Attributes;
 use Imper86\ImmiApi\Resource\Carts;
 use Imper86\ImmiApi\Resource\Commands;
@@ -25,6 +26,7 @@ use Psr\Cache\CacheItemPoolInterface;
  * Interface AsanaInterface
  * @package Imper86\Immi
  *
+ * @method Api api()
  * @method Attributes attributes()
  * @method Carts carts()
  * @method Commands commands()
