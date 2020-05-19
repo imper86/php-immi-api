@@ -16,6 +16,7 @@ use Imper86\ImmiApi\Oauth\OauthClient;
 use Imper86\ImmiApi\Oauth\OauthClientInterface;
 use Imper86\ImmiApi\Plugin\HeadersPlugin;
 use Imper86\ImmiApi\Plugin\UriPlugin;
+use Imper86\ImmiApi\Resource\Api;
 use Imper86\ImmiApi\Resource\Attributes;
 use Imper86\ImmiApi\Resource\Carts;
 use Imper86\ImmiApi\Resource\Commands;
@@ -32,6 +33,7 @@ use Psr\Cache\CacheItemPoolInterface;
  * Class Asana
  * @package Imper86\ImmiApi
  *
+ * @method Api api()
  * @method Attributes attributes()
  * @method Carts carts()
  * @method Commands commands()
