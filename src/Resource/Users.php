@@ -6,6 +6,7 @@ namespace Imper86\ImmiApi\Resource;
 
 use Imper86\ImmiApi\Resource\Users\InvoiceAddresses;
 use Imper86\ImmiApi\Resource\Users\PriceRules;
+use Imper86\ImmiApi\Resource\Users\RegistrationApplications;
 use Imper86\ImmiApi\Resource\Users\ShippingAddresses;
 
 /**
@@ -15,6 +16,7 @@ use Imper86\ImmiApi\Resource\Users\ShippingAddresses;
  * @method InvoiceAddresses invoiceAddresses()
  * @method PriceRules priceRules()
  * @method ShippingAddresses shippingAddresses()
+ * @method RegistrationApplications registrationApplications()
  */
 class Users extends AbstractResource
 {
