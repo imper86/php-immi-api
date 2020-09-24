@@ -7,6 +7,7 @@ namespace Imper86\ImmiApi\Resource;
 use Imper86\ImmiApi\Resource\Orders\InvoiceAddresses;
 use Imper86\ImmiApi\Resource\Orders\Items;
 use Imper86\ImmiApi\Resource\Orders\ShippingAddresses;
+use Imper86\ImmiApi\Resource\Orders\UploadInvoice;
 
 /**
  * Class Orders
@@ -15,6 +16,7 @@ use Imper86\ImmiApi\Resource\Orders\ShippingAddresses;
  * @method InvoiceAddresses invoiceAddresses()
  * @method Items items()
  * @method ShippingAddresses shippingAddresses()
+ * @method UploadInvoice uploadInvoice()
  */
 class Orders extends AbstractResource
 {
