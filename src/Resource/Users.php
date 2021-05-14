@@ -5,6 +5,7 @@ namespace Imper86\ImmiApi\Resource;
 
 
 use Imper86\ImmiApi\Resource\Users\InvoiceAddresses;
+use Imper86\ImmiApi\Resource\Users\Me;
 use Imper86\ImmiApi\Resource\Users\PriceRules;
 use Imper86\ImmiApi\Resource\Users\RegistrationApplications;
 use Imper86\ImmiApi\Resource\Users\ShippingAddresses;
@@ -14,6 +15,7 @@ use Imper86\ImmiApi\Resource\Users\ShippingAddresses;
  * @package Imper86\ImmiApi\Resource
  *
  * @method InvoiceAddresses invoiceAddresses()
+ * @method Me me()
  * @method PriceRules priceRules()
  * @method ShippingAddresses shippingAddresses()
  * @method RegistrationApplications registrationApplications()

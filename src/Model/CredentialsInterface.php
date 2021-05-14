@@ -10,5 +10,7 @@ interface CredentialsInterface
 
     public function getClientSecret(): string;
 
-    public function getRedirectUri(): string;
+    public function getRedirectUri(): ?string;
+
+    public function isSandbox(): bool;
 }

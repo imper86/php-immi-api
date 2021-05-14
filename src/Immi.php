@@ -68,7 +68,7 @@ class Immi implements ImmiInterface
         $this->builder = $httpClientBuilder ?: new Builder();
         $this->reflection = new \ReflectionClass($this);
 
-        $this->addPlugin(new UriPlugin());
+        $this->addPlugin(new UriPlugin($credentials->isSandbox()));
         $this->addPlugin(new HeadersPlugin());
     }
 

@@ -12,11 +12,21 @@ use Psr\Http\Message\RequestInterface;
 
 class OauthPlugin implements Plugin
 {
+    /**
+     * @var bool
+     */
+    private $sandbox;
+
+    public function __construct(bool $sandbox = false)
+    {
+        $this->sandbox = $sandbox;
+    }
+
     public function handleRequest(RequestInterface $request, callable $next, callable $first): Promise
     {
         $uri = $request->getUri()
             ->withScheme('https')
-            ->withHost(EndpointHost::API);
+            ->withHost($this->sandbox ? EndpointHost::SANDBOX : EndpointHost::API);
         $request = $request
             ->withHeader('Content-Type', ContentType::X_WWW_FORM_URLENCODED)
             ->withHeader('Accept', ContentType::JSON)

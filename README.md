@@ -7,86 +7,74 @@ Just use composer:
 composer require imper86/php-immi-api
 ```
 
-## Authentication
+### HTTPlug note
+This lib uses [HTTPlug](https://github.com/php-http/httplug)
+so it doesn't depend on any http client. In order to use this
+lib you must have some [PSR-18 http client](https://www.php-fig.org/psr/psr-18)
+and [PSR-17 http factories](https://www.php-fig.org/psr/psr-17).
+If you don't know which one you shoud install you can require
+these:
+
+```sh
+composer require php-http/guzzle6-adapter http-interop/http-factory-guzzle
+```
+
+## Usage
 Library has a bunch of mechanisms that allows you to forget about
 tokens, expirations etc. But in order to start using it you must
 authorize user using Oauth flow.
 
-Create Credentials object:
+### Client credentials flow example
+
 ```php
-use Imper86\OauthClient\Model\Credentials;
-
-$credentials = new Credentials([
-    'client_id' => 'your_client_id',
-    'client_secret' => 'your_client_secret',
-    'redirect_uri' => 'http://localhost:8000/immi',
-]);
-```
-
-Create TokenRepository object:
-```php
-use Imper86\OauthClient\Repository\FileTokenRepository;
-
-$tokenRepository = new FileTokenRepository(__DIR__ . '/immi_tokens');
-```
-
-You can invent your own TokenRepository, just implement
-[TokenRepositoryInterface](https://github.com/imper86/php-oauth2-client/blob/master/src/Repository/TokenRepositoryInterface.php).
-You can use your DB, Redis, or anything you want.
-
-Create client:
-```php
+use Http\Client\Common\Plugin\ErrorPlugin;
 use Imper86\ImmiApi\Immi;
+use Imper86\ImmiApi\Model\Credentials;
+use Imper86\ImmiApi\Oauth\FileTokenRepository;
+use Imper86\ImmiApi\Plugin\AuthPlugin;
 
-$client = new Immi($credentials, $tokenRepository);
-```
+$sandbox = true; //if set to false you will connect to production environment
+$credentials = new Credentials(
+    'your_client_id',
+    'your_client_secret',
+    null,
+    $sandbox
+);
+$client = new Immi($credentials);
 
-Get the authorization URL, and redirect your user:
-```php
-$state = 'your-random-secret-state';
-header(sprintf('Location: %s', $client->oauth2()->getAuthorizationUrl($state)));
-```
+/*
+ * You can invent your own TokenRepository, just implement
+ * our TokenRepositoryInterface.
+ * You can use your DB, Redis, or anything you want.
+ * For this example we use included FileTokenRepository
+ */
+$tokenRepository = new FileTokenRepository(__DIR__ . '/var/immi_token.json');
 
-After successfull authorization, user will be redirected to your
-**redirect_uri** with *state* and *code* parameters.
-
-Verify the state and fetch token:
-```php
-if ($state === $_GET['state'] ?? null) {
-    throw new Exception('CSRF?!');
+if (!$tokenRepository->load()) {
+    $tokenRepository->save($client->oauth()->fetchTokenWithClientCredentials());
 }
 
-$token = $client->oauth2()->fetchToken($_GET['code']);
+//this plugin will take care of refreshing expired access tokens and will store new ones with $tokenRepository
+$client->addPlugin(new AuthPlugin($tokenRepository, $client->oauth()));
+//optional, this plugin will throw exceptions on every negative http status code
+$client->addPlugin(new ErrorPlugin());
+
+$response = $client->users()->me()->get();
+
+dump(json_decode($response->getBody()->__toString(), true));
 ```
 
-Library will use your TokenRepository to store the token, and from
-now on you should only care about storing user's Asana gid.
+### Auth code flow
+If you want to use it, please contact me to get detailed info.
 
-You can get that id with:
-```php
-$token->getResourceOwnerId();
-```
-
-## Usage
-You can use client instantiated in auth part. To authorize requests you got many options.
-Easiest option is to use [imper86/autotoken-plugin](https://github.com/imper86/autotoken-plugin)
-
-```php
-use Imper86\AutoTokenPlugin\AutoTokenPlugin;
-
-$client->addPlugin(new AutoTokenPlugin($token->getResourceOwnerId(), $tokenRepository, $client->oauth2()));
-```
-
-You can also use HTTPlug built-in BearerPlugin, just like that:
-```php
-use Http\Client\Common\Plugin\AuthenticationPlugin;
-use Http\Message\Authentication\Bearer;
-
-$client->addPlugin(new AuthenticationPlugin(new Bearer($token->getAccessToken())));
-```
+### Resources
+You can use client instantiated in auth part.
 
 From now you can use these methods on $client:
+
 ```php
+use Imper86\ImmiApi\Immi;
+$client->api()->(...)
 $client->attributes()->(...)
 $client->carts()->(...)
 $client->commands()->(...)
@@ -97,30 +85,13 @@ $client->products()->(...)
 $client->users()->(...)
 ```
 
-Fast example:
-```php
-use Imper86\OauthClient\Model\Credentials;
-use Imper86\OauthClient\Repository\FileTokenRepository;
-use Imper86\ImmiApi\Immi;
-use Imper86\AutoTokenPlugin\AutoTokenPlugin;
-use Http\Client\Common\Plugin\ErrorPlugin;
-
-$credentials = new Credentials([
-    'client_id' => 'verysecretclientid',
-    'client_secret' => 'yourverysecretsecret',
-    'redirect_uri' => 'http://localhost:8000/immiapi',
-]);
-$tokenRepository = new FileTokenRepository('/tmp');
-$client = new Immi($credentials, $tokenRepository);
-$client->addPlugin(new AutoTokenPlugin('userid', $tokenRepository, $client->oauth()));
-$client->addPlugin(new ErrorPlugin());
-
-var_dump($client->attributes()->options()->translations()->get('xfg-asdf'));
-```
-
 If you use IDE with typehinting such as PHPStorm, you'll easily 
 figure it out. If not, please 
 [take a look in Resource directory](src/Resource)
+
+**Be aware than not all resources will be accessible for you. 
+Many of them requires admin role, because the API is 
+shared between admin users and client users.**
 
 ## Contributing
 Any help will be very appreciated.

@@ -38,7 +38,7 @@ class OauthClient implements OauthClientInterface
         $this->tokenFactory = new TokenFactory();
 
         $this->addPlugin(new ErrorPlugin());
-        $this->addPlugin(new OauthPlugin());
+        $this->addPlugin(new OauthPlugin($credentials->isSandbox()));
     }
 
     public function getAuthorizationUri(?string $state = null): UriInterface

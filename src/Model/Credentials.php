@@ -15,15 +15,20 @@ class Credentials implements CredentialsInterface
      */
     private $clientSecret;
     /**
-     * @var string
+     * @var string|null
      */
     private $redirectUri;
+    /**
+     * @var bool
+     */
+    private $sandbox;
 
-    public function __construct(string $clientId, string $clientSecret, string $redirectUri)
+    public function __construct(string $clientId, string $clientSecret, ?string $redirectUri, bool $sandbox = false)
     {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->redirectUri = $redirectUri;
+        $this->sandbox = $sandbox;
     }
 
     /**
@@ -43,10 +48,18 @@ class Credentials implements CredentialsInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getRedirectUri(): string
+    public function getRedirectUri(): ?string
     {
         return $this->redirectUri;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSandbox(): bool
+    {
+        return $this->sandbox;
     }
 }
